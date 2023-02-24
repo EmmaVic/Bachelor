@@ -24,11 +24,11 @@ N = length(df.Litra)
 @variable(m, xt[1:N], Bin)
 @variable(m, xo[1:N], Bin)
 
-# variables to linearize constraint
-@variable(m, zt[2:N+1]>=0 )
-@variable(m, zo[2:N+1]>=0 )
+# variable to linearize constraint
+#@variable(m, z[1:N] >= 0 )
+
 # initializing variable KD for "kilometers of dirtyness"
-@variable(m, KD[1:N]>=0)
+@variable(m, KD[1:N] >= 0)
 
 # vector of kilometers between each stop
 km =  (df.Km)
@@ -37,12 +37,14 @@ km =  (df.Km)
 Tr = 80.0
 Or = 20.0
 
+# Procentage of Or cleaning to Tr cleaning
+q = Or/Tr
+
 # vector of binary values saying if a cleaning can happen at given station
 Pc = (df.BinaryC)
 
 # vector of stoptime on each stop
 St =  (df.StopTime)
-
 
 # max cutoff of kilometers of dirtyness, in km
 C = 1093.0
@@ -51,26 +53,25 @@ C = 1093.0
 M = C
 
 # Objective function
-@objective(m, Min, sum(xt[i]*Tr +Or*xo[i] for i=1:N ))
+@objective(m, Min, sum(xt[i]*Tr + Or*xo[i] for i=1:N))
 
 # constraints
-@constraint(m, [i=2:N], zt[i] <= xt[i-1]*M)
-@constraint(m, [i=2:N], zt[i] <= KD[i-1])
-@constraint(m, [i=2:N], zt[i] >= KD[i-1] - (1-xt[i-1]) * M)
-@constraint(m, [i=2:N], zo[i] <= xo[i-1]*M)
-@constraint(m, [i=2:N], zo[i] <= KD[i-1])
-@constraint(m, [i=2:N], zo[i] >= KD[i-1] - (1-xo[i-1]) * M)
-@constraint(m, [i=2:N], KD[i] >= KD[i-1] + km[i] - zt[i] - 1/4*zo[i] - km[i]*xt[i])
-@constraint(m, [i=1:N], xt[i] + xo[i]  <= Pc[i] )
+@constraint(m, KD[1] >= km[1])
+@constraint(m, [i=1:N], xt[i] + xo[i]  <= Pc[i])
 @constraint(m, [i=1:N], xt[i] * Tr <= St[i])
-@constraint(m, [i=1:N], xo[i] * Or .<= St[i])
+@constraint(m, [i=1:N], xo[i] * Or <= St[i])
+
+@constraint(m, [i=2:N], z[i] <= (xt[i-1] + xo[i-1]) * M)
+@constraint(m, [i=2:N], z[i] <= KD[i-1])
+@constraint(m, [i=2:N], z[i] >= KD[i-1] - (1 - xt[i-1]) * M)
+@constraint(m, [i=2:N], z[i] >= q * KD[i-1] - (1 - xo[i-1]) * M)
+@constraint(m, [i=2:N], KD[i] >= KD[i-1] + km[i] - z)
 @constraint(m, [i=1:N], KD[i] <= C)
-@constraint(m, KD[1]>=km[1])
 
-
-
+# Optimizing the model
 optimize!(m)
 
+# Printing the optimal solution
 if termination_status(m) == MOI.OPTIMAL
     println("Objective value: ", JuMP.objective_value.(m))
     println("xt = ", JuMP.value.(xt))
