@@ -25,7 +25,7 @@ N = length(df.Litra)
 @variable(m, xo[1:N], Bin)
 
 # variable to linearize constraint
-#@variable(m, z[1:N] >= 0 )
+@variable(m, z[1:N] >= 0 )
 
 # initializing variable KD for "kilometers of dirtyness"
 @variable(m, KD[1:N] >= 0)
@@ -47,7 +47,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1093.0
+C = 1200.0
 
 # big M notation
 M = C
@@ -57,16 +57,16 @@ M = C
 
 # constraints
 @constraint(m, KD[1] >= km[1])
-@constraint(m, [i=1:N], xt[i] + xo[i]  <= Pc[i])
-@constraint(m, [i=1:N], xt[i] * Tr <= St[i])
-@constraint(m, [i=1:N], xo[i] * Or <= St[i])
+@constraint(m, [i=1:N], xt[i] + xo[i]  .<= Pc[i])
+@constraint(m, [i=1:N], xt[i] * Tr .<= St[i])
+@constraint(m, [i=1:N], xo[i] * Or .<= St[i])
 
-@constraint(m, [i=2:N], z[i] <= (xt[i-1] + xo[i-1]) * M)
-@constraint(m, [i=2:N], z[i] <= KD[i-1])
-@constraint(m, [i=2:N], z[i] >= KD[i-1] - (1 - xt[i-1]) * M)
-@constraint(m, [i=2:N], z[i] >= q * KD[i-1] - (1 - xo[i-1]) * M)
-@constraint(m, [i=2:N], KD[i] >= KD[i-1] + km[i] - z)
-@constraint(m, [i=1:N], KD[i] <= C)
+@constraint(m, [i=2:N], z[i] .<= (xt[i-1] + xo[i-1]) * M)
+@constraint(m, [i=2:N], z[i] .<= KD[i-1])
+@constraint(m, [i=2:N], z[i] .>= KD[i-1] - (1 - xt[i-1]) * M)
+@constraint(m, [i=2:N], z[i] .>= q * KD[i-1] - (1 - xo[i-1]) * M)
+@constraint(m, [i=2:N], KD[i] .>= KD[i-1] + km[i] - z)
+@constraint(m, [i=1:N], KD[i] .<= C)
 
 # Optimizing the model
 optimize!(m)
