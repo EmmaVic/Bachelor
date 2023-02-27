@@ -64,8 +64,8 @@ M = C
 @constraint(m, [i=1:N], xo[i] * Or .<= St[i])
 
 @constraint(m, [i=2:N], zt[i] .<= xt[i-1] * M)
-@constraint(m, [i=2:N], zt[i] + zo[i] .<= KD[i-1])
 @constraint(m, [i=2:N], zo[i] .<= xo[i-1] * M)
+@constraint(m, [i=2:N], zt[i] + zo[i] .<= KD[i-1])
 
 @constraint(m, [i=2:N], zt[i] .>= KD[i-1] - (1 - xt[i-1]) * M)
 @constraint(m, [i=2:N], zo[i] .>= q * KD[i-1] - (1 - xo[i-1]) * M)
