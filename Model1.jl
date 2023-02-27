@@ -48,7 +48,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 700.0
+C = 1100.0
 
 # big M notation
 M = C
@@ -58,25 +58,21 @@ M = C
 
 # constraints
 @constraint(m, KD[1] >= km[1])
+@constraint(m, KD[1] <= km[1])
 @constraint(m, [i=1:N], xt[i] + xo[i] .<= Pc[i])
 @constraint(m, [i=1:N], xt[i] * Tr .<= St[i])
 @constraint(m, [i=1:N], xo[i] * Or .<= St[i])
 
-<<<<<<< HEAD
 @constraint(m, [i=2:N], zt[i] .<= xt[i-1] * M)
-@constraint(m, [i=2:N], zt[i]+zo[i] .<= KD[i-1])
+@constraint(m, [i=2:N], zt[i] + zo[i] .<= KD[i-1])
 @constraint(m, [i=2:N], zo[i] .<= xo[i-1] * M)
 
 @constraint(m, [i=2:N], zt[i] .>= KD[i-1] - (1 - xt[i-1]) * M)
 @constraint(m, [i=2:N], zo[i] .>= q * KD[i-1] - (1 - xo[i-1]) * M)
+@constraint(m, [i=2:N], zo[i] .<= q * KD[i-1] - (1 - xo[i-1]) * M)
+
 @constraint(m, [i=2:N], KD[i] .>= KD[i-1] + km[i] - zt[i]-zo[i])
-=======
-@constraint(m, [i=2:N], z[i] .<= (xt[i-1] + xo[i-1]) * M)
-@constraint(m, [i=2:N], z[i] .<= KD[i-1])
-@constraint(m, [i=2:N], z[i] .>= KD[i-1] - (1 - xt[i-1]) * M)
-@constraint(m, [i=2:N], z[i] .>= (q * KD[i-1]) - (1 - xo[i-1]) * M)
-@constraint(m, [i=2:N], KD[i] .>= KD[i-1] + km[i] - z[i])
->>>>>>> eca819d3d1fc13194642bf61e4f8e34917566e4c
+@constraint(m, [i=2:N], KD[i] .<= KD[i-1] + km[i] - zt[i]-zo[i])
 @constraint(m, [i=1:N], KD[i] .<= C)
 
 # Optimizing the model
