@@ -48,7 +48,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1500.0
+C = 1200.0
 
 # big M notation
 M = C
