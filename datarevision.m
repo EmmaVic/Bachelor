@@ -62,58 +62,58 @@ for i = 1:height(Normaleuge2023(:,1))-1
     if Normaleuge2023{i,1} ~= Normaleuge2023{i+1,1}
         
         if Normaleuge2023{i,2} == 'ABS' || Normaleuge2023{i,2} == 'B' || Normaleuge2023{i,2} == 'BK'
-        Tr(j) = 47;
-        Or(j) = 175;
+        Or(j) = 47;
+        Tr(j) = 175;
         j = j+1;
 
         elseif Normaleuge2023{i,2} == 'ERF'
-        Tr(j) = 20;
-        Or(j) = 80;
+        Or(j) = 20;
+        Tr(j) = 80;
         j = j+1;
 
         elseif Normaleuge2023{i,2} == 'ETS'
-        Tr(j) = 15;
-        Or(j) = 104;
+        Or(j) = 15;
+        Tr(j) = 104;
         j = j+1;
 
         elseif Normaleuge2023{i,2} == 'ICA' || Normaleuge2023{i,2} == 'ICU'
-        Tr(j) = 16;
-        Or(j) = 72;
+        Or(j) = 16;
+        Tr(j) = 72;
         j = j+1;
 
         elseif Normaleuge2023{i,2} == 'ICED'
-        Tr(j) = 39;
-        Or(j) = 125;
+        Or(j) = 39;
+        Tr(j) = 125;
         j = j+1;
 
         elseif Normaleuge2023{i,2} == 'MGA'
-        Tr(j) = 20;
-        Or(j) = 109;
+        Or(j) = 20;
+        Tr(j) = 109;
         j = j+1;
 
         elseif Normaleuge2023{i,2} == 'MPA'
-        Tr(j) = 11;
-        Or(j) = 56;
+        Or(j) = 11;
+        Tr(j) = 56;
         j = j+1;
 
         elseif Normaleuge2023{i,2} == 'MQ' || Normaleuge2023{i,2} == 'MQS'
-        Tr(j) = 12;
-        Or(j) = 56;
+        Or(j) = 12;
+        Tr(j) = 56;
         j = j+1;
 
         elseif Normaleuge2023{i,2} == 'MR'
-        Tr(j) = 12;
-        Or(j) = 60;
+        Or(j) = 12;
+        Tr(j) = 60;
         j = j+1;
 
         end
     end
 end
 
-Trtable=array2table(Or','VariableNames',{'Tr'});
+Trtable=array2table(Tr','VariableNames',{'Tr'});
 Cleaningschedule=[Trtable];
 
-Ortable=array2table(Tr','VariableNames',{'Or'});
+Ortable=array2table(Or','VariableNames',{'Or'});
 Cleaningschedule=[Cleaningschedule Ortable];
 
 %% exporting table to excel
