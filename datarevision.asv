@@ -59,49 +59,48 @@ j = 1;
 
 for i = 1:height(Normaleuge2023(:,1))-1
 
-    if Normaleuge2023{i,1} ~= Normaleuge2023{i+1,1}
-        
-        if Normaleuge2023{i,2} == 'ABS' || Normaleuge2023{i,2} == 'B' || Normaleuge2023{i,2} == 'BK'
+    if Normaleuge2023(i,1) ~= Normaleuge2023(i+1,1)
+        if Normaleuge2023(i,2) == 'ABS' || Normaleuge2023(i,2) == 'B' || Normaleuge2023(i,2) == 'BK'
         Tr(j) = 47;
         Or(j) = 175;
         j = j+1;
 
-        elseif Normaleuge2023{i,2} == 'ERF'
+        elseif Normaleuge2023(i,2) == 'ERF'
         Tr(j) = 20;
         Or(j) = 80;
         j = j+1;
 
-        elseif Normaleuge2023{i,2} == 'ETS'
+        elseif Normaleuge2023(i,2) == 'ETS'
         Tr(j) = 15;
         Or(j) = 104;
         j = j+1;
 
-        elseif Normaleuge2023{i,2} == 'ICA' || Normaleuge2023{i,2} == 'ICU'
+        elseif Normaleuge2023(i,2) == 'ICA' || Normaleuge2023(i,2) == 'ICU'
         Tr(j) = 16;
         Or(j) = 72;
         j = j+1;
 
-        elseif Normaleuge2023{i,2} == 'ICED'
+        elseif Normaleuge2023(i,2) == 'ICED'
         Tr(j) = 39;
         Or(j) = 125;
         j = j+1;
 
-        elseif Normaleuge2023{i,2} == 'MGA'
+        elseif Normaleuge2023(i,2) == 'MGA'
         Tr(j) = 20;
         Or(j) = 109;
         j = j+1;
 
-        elseif Normaleuge2023{i,2} == 'MPA'
+        elseif Normaleuge2023(i,2) == 'MPA'
         Tr(j) = 11;
         Or(j) = 56;
         j = j+1;
 
-        elseif Normaleuge2023{i,2} == 'MQ' || Normaleuge2023{i,2} == 'MQS'
+        elseif Normaleuge2023(i,2) == 'MQ' || Normaleuge2023(i,2) == 'MQS'
         Tr(j) = 12;
         Or(j) = 56;
         j = j+1;
 
-        elseif Normaleuge2023{i,2} == 'MR'
+        elseif Normaleuge2023(i,2) == 'MR'
         Tr(j) = 12;
         Or(j) = 60;
         j = j+1;
@@ -111,16 +110,13 @@ for i = 1:height(Normaleuge2023(:,1))-1
 end
 
 Trtable=array2table(Tr','VariableNames',{'Tr'});
-Cleaningschedule=[Trtable];
+Normal=[Normal(:,1:12) Trtable];
 
 Ortable=array2table(Or','VariableNames',{'Or'});
-Cleaningschedule=[Cleaningschedule Ortable];
+Normal=[Normal(:,1:13) Ortable];
 
 %% exporting table to excel
 
 filename='reviseddataTog1.xlsx';
 writetable(Normal,filename,'Sheet',1,'Range','A1');
 
-%%
-filename='Cleaningschedule.xlsx';
-writetable(Cleaningschedule,filename,'Sheet',1,'Range','A1');
