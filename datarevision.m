@@ -110,10 +110,10 @@ for i = 1:height(Normaleuge2023(:,1))-1
     end
 end
 
-Trtable=array2table(Tr','VariableNames',{'Tr'});
+Trtable=array2table(Or','VariableNames',{'Tr'});
 Cleaningschedule=[Trtable];
 
-Ortable=array2table(Or','VariableNames',{'Or'});
+Ortable=array2table(Tr','VariableNames',{'Or'});
 Cleaningschedule=[Cleaningschedule Ortable];
 
 %% exporting table to excel
