@@ -89,15 +89,30 @@ for i = 1:height(Normaleuge2023(:,1))
         Or(i) = 12;
         Tr(i) = 60;
 
+
     end
 end
 
-TRtable=array2table(Tr','VariableNames',{'StopTime'});
+TRtable=array2table(Tr','VariableNames',{'Tr'});
 Normal=[Normal TRtable];
 
-ORtable=array2table(Or','VariableNames',{'StopTime'});
+ORtable=array2table(Or','VariableNames',{'Or'});
 Normal=[Normal ORtable];
 
+%% removing the rows that we dont need 
+
+in = [];
+j = 1;
+
+for i = 1:height(Normaleuge2023(:,1))
+    if Normal{i,2} == 'EB' || Normal{i,2} == 'EA' || Normal{i,2} == 'ME'
+        in(j) = i;
+        j = j+1;
+    elseif Normal{i,10} == 0
+        Normal(i,:) = in(j);
+        j = j+1;
+    end
+end
 
 %% exporting table to excel
 
