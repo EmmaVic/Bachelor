@@ -34,6 +34,18 @@ N = length(df.Litra)
 # vector of kilometers between each stop
 km =  (df.Km)
 
+# vector of departure dates
+Dd = df.AfgangDato
+
+# vector of train number
+Tn = df.Tognr
+
+# vector of departure station
+Ds = df.Frastation
+
+# Lbsnr vector
+Ln = df.lbsnr
+
 # time of Tr cleaning on ERF train in minutes
 Tr = 80.0
 Or = 20.0
@@ -54,14 +66,14 @@ C = 1200.0
 M = C
 
 # Objective function
-@objective(m, Min, sum(xt[i]*Tr + Or*xo[i] for i=1:N))
+@objective(m, Min, sum(xt[i]*Tr[i] + Or[i]*xo[i] for i=1:N))
 
 # constraints
 @constraint(m, KD[1] >= km[1])
 @constraint(m, KD[1] <= km[1])
 @constraint(m, [i=1:N], xt[i] + xo[i] .<= Pc[i])
-@constraint(m, [i=1:N], xt[i] * Tr .<= St[i])
-@constraint(m, [i=1:N], xo[i] * Or .<= St[i])
+@constraint(m, [i=1:N], xt[i] * Tr[i] .<= St[i])
+@constraint(m, [i=1:N], xo[i] * Or[i] .<= St[i])
 
 @constraint(m, [i=2:N], zt[i] .<= xt[i-1] * M)
 @constraint(m, [i=2:N], zo[i] .<= xo[i-1] * M)
@@ -70,9 +82,32 @@ M = C
 @constraint(m, [i=2:N], zt[i] .>= KD[i-1] - (1 - xt[i-1]) * M)
 @constraint(m, [i=2:N], zo[i] .>=  KD[i-1] - (1 - xo[i-1]) * M)
 
-@constraint(m, [i=2:N], KD[i] .>= KD[i-1] + km[i] - zt[i]-q*zo[i])
-@constraint(m, [i=2:N], KD[i] .<= KD[i-1] + km[i] - zt[i]-q*zo[i])
 @constraint(m, [i=1:N], KD[i] .<= C)
+
+
+# constraints deciding if two trains are connected
+for i in 1:N
+    for j in i+1:N
+        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
+            @constraint(xt[i] <= xt[j])
+            @constraint(xt[i] >= xt[j])
+            @constraint(xo[i] <= xt[j])
+            @constraint(xo[i] >= xt[j])
+        end
+    end
+end
+
+# constraint making sure KD is reset when a new day train
+for i in 2:N
+    if Ls[i] != Ls[i-1]
+        @constraint(KD[i] <= km[i])
+        @constraint(KD[i] >= km[i])
+    else
+        @constraint(KD[i] <= KD[i-1]+km[i]-zt[i]-q*zo[i])
+        @constraint(KD[i] >= KD[i-1]+km[i]-zt[i]-q*zo[i])
+    end
+end
+
 
 # Optimizing the model
 optimize!(m)
