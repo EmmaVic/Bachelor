@@ -50,6 +50,68 @@ end
 Stoptable=array2table(Stoptime','VariableNames',{'StopTime'});
 Normal=[Normal(:,1:7) Stoptable Normal(:,8:11)];
 
+%% Creating Or and Tr for each station 
+
+for i = 1:height(Normaleuge2023(:,1))
+    if Normaleuge2023{i,2} == 'ABS' || Normaleuge2023{i,2} == 'B' || Normaleuge2023{i,2} == 'BK'
+        Or(i) = 47;
+        Tr(i) = 175;
+
+        elseif Normaleuge2023{i,2} == 'ERF'
+        Or(i) = 20;
+        Tr(i) = 80;
+
+        elseif Normaleuge2023{i,2} == 'ETS'
+        Or(i) = 15;
+        Tr(i) = 104;
+
+        elseif Normaleuge2023{i,2} == 'ICA' || Normaleuge2023{i,2} == 'ICU'
+        Or(i) = 16;
+        Tr(i) = 72;
+
+        elseif Normaleuge2023{i,2} == 'ICED'
+        Or(i) = 39;
+        Tr(i) = 125;
+
+        elseif Normaleuge2023{i,2} == 'MGA'
+        Or(i) = 20;
+        Tr(i) = 109;
+
+        elseif Normaleuge2023{i,2} == 'MPA'
+        Or(i) = 11;
+        Tr(i) = 56;
+
+        elseif Normaleuge2023{i,2} == 'MQ' || Normaleuge2023{i,2} == 'MQS'
+        Or(i) = 12;
+        Tr(i) = 56;
+
+        elseif Normaleuge2023{i,2} == 'MR'
+        Or(i) = 12;
+        Tr(i) = 60;
+
+    end
+end
+
+TRtable=array2table(Tr','VariableNames',{'Tr'});
+Normal=[Normal TRtable];
+
+ORtable=array2table(Or','VariableNames',{'Or'});
+Normal=[Normal ORtable];
+
+
+%% exporting table to excel
+
+filename='reviseddataAllData.xlsx';
+writetable(Normal,filename,'Sheet',1,'Range','A1');
+
+
+
+
+
+
+
+
+
 %% creating two coloumns with TR and OR times for each train type 
 
 Tr=[];
@@ -116,10 +178,6 @@ Cleaningschedule=[Trtable];
 Ortable=array2table(Or','VariableNames',{'Or'});
 Cleaningschedule=[Cleaningschedule Ortable];
 
-%% exporting table to excel
-
-filename='reviseddataTog1.xlsx';
-writetable(Normal,filename,'Sheet',1,'Range','A1');
 
 %%
 filename='Cleaningschedule.xlsx';

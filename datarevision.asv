@@ -50,6 +50,68 @@ end
 Stoptable=array2table(Stoptime','VariableNames',{'StopTime'});
 Normal=[Normal(:,1:7) Stoptable Normal(:,8:11)];
 
+%% Creating Or and Tr for each station 
+
+for i = 1:height(Normaleuge2023(:,1))
+    if Normaleuge2023{i,2} == 'ABS' || Normaleuge2023{i,2} == 'B' || Normaleuge2023{i,2} == 'BK'
+        Or(i) = 47;
+        Tr(i) = 175;
+
+        elseif Normaleuge2023{i,2} == 'ERF'
+        Or(i) = 20;
+        Tr(i) = 80;
+
+        elseif Normaleuge2023{i,2} == 'ETS'
+        Or(i) = 15;
+        Tr(i) = 104;
+
+        elseif Normaleuge2023{i,2} == 'ICA' || Normaleuge2023{i,2} == 'ICU'
+        Or(i) = 16;
+        Tr(i) = 72;
+
+        elseif Normaleuge2023{i,2} == 'ICED'
+        Or(i) = 39;
+        Tr(i) = 125;
+
+        elseif Normaleuge2023{i,2} == 'MGA'
+        Or(i) = 20;
+        Tr(i) = 109;
+
+        elseif Normaleuge2023{i,2} == 'MPA'
+        Or(i) = 11;
+        Tr(i) = 56;
+
+        elseif Normaleuge2023{i,2} == 'MQ' || Normaleuge2023{i,2} == 'MQS'
+        Or(i) = 12;
+        Tr(i) = 56;
+
+        elseif Normaleuge2023{i,2} == 'MR'
+        Or(i) = 12;
+        Tr(i) = 60;
+
+    end
+end
+
+TRtable=array2table(Tr','VariableNames',{'StopTime'});
+Normal=[Normal TRtable];
+
+ORtable=array2table(Or','VariableNames',{'StopTime'});
+Normal=[Normal ORtable];
+
+
+%% exporting table to excel
+
+filename='reviseddataAllData.xlsx';
+writetable(Normal,filename,'Sheet',1,'Range','A1');
+
+
+
+
+
+
+
+
+
 %% creating two coloumns with TR and OR times for each train type 
 
 Tr=[];
@@ -59,50 +121,51 @@ j = 1;
 
 for i = 1:height(Normaleuge2023(:,1))-1
 
-    if Normaleuge2023(i,1) ~= Normaleuge2023(i+1,1)
-        if Normaleuge2023(i,2) == 'ABS' || Normaleuge2023(i,2) == 'B' || Normaleuge2023(i,2) == 'BK'
-        Tr(j) = 47;
-        Or(j) = 175;
+    if Normaleuge2023{i,1} ~= Normaleuge2023{i+1,1}
+        
+        if Normaleuge2023{i,2} == 'ABS' || Normaleuge2023{i,2} == 'B' || Normaleuge2023{i,2} == 'BK'
+        Or(j) = 47;
+        Tr(j) = 175;
         j = j+1;
 
-        elseif Normaleuge2023(i,2) == 'ERF'
-        Tr(j) = 20;
-        Or(j) = 80;
+        elseif Normaleuge2023{i,2} == 'ERF'
+        Or(j) = 20;
+        Tr(j) = 80;
         j = j+1;
 
-        elseif Normaleuge2023(i,2) == 'ETS'
-        Tr(j) = 15;
-        Or(j) = 104;
+        elseif Normaleuge2023{i,2} == 'ETS'
+        Or(j) = 15;
+        Tr(j) = 104;
         j = j+1;
 
-        elseif Normaleuge2023(i,2) == 'ICA' || Normaleuge2023(i,2) == 'ICU'
-        Tr(j) = 16;
-        Or(j) = 72;
+        elseif Normaleuge2023{i,2} == 'ICA' || Normaleuge2023{i,2} == 'ICU'
+        Or(j) = 16;
+        Tr(j) = 72;
         j = j+1;
 
-        elseif Normaleuge2023(i,2) == 'ICED'
-        Tr(j) = 39;
-        Or(j) = 125;
+        elseif Normaleuge2023{i,2} == 'ICED'
+        Or(j) = 39;
+        Tr(j) = 125;
         j = j+1;
 
-        elseif Normaleuge2023(i,2) == 'MGA'
-        Tr(j) = 20;
-        Or(j) = 109;
+        elseif Normaleuge2023{i,2} == 'MGA'
+        Or(j) = 20;
+        Tr(j) = 109;
         j = j+1;
 
-        elseif Normaleuge2023(i,2) == 'MPA'
-        Tr(j) = 11;
-        Or(j) = 56;
+        elseif Normaleuge2023{i,2} == 'MPA'
+        Or(j) = 11;
+        Tr(j) = 56;
         j = j+1;
 
-        elseif Normaleuge2023(i,2) == 'MQ' || Normaleuge2023(i,2) == 'MQS'
-        Tr(j) = 12;
-        Or(j) = 56;
+        elseif Normaleuge2023{i,2} == 'MQ' || Normaleuge2023{i,2} == 'MQS'
+        Or(j) = 12;
+        Tr(j) = 56;
         j = j+1;
 
-        elseif Normaleuge2023(i,2) == 'MR'
-        Tr(j) = 12;
-        Or(j) = 60;
+        elseif Normaleuge2023{i,2} == 'MR'
+        Or(j) = 12;
+        Tr(j) = 60;
         j = j+1;
 
         end
@@ -110,13 +173,12 @@ for i = 1:height(Normaleuge2023(:,1))-1
 end
 
 Trtable=array2table(Tr','VariableNames',{'Tr'});
-Normal=[Normal(:,1:12) Trtable];
+Cleaningschedule=[Trtable];
 
 Ortable=array2table(Or','VariableNames',{'Or'});
-Normal=[Normal(:,1:13) Ortable];
+Cleaningschedule=[Cleaningschedule Ortable];
 
-%% exporting table to excel
 
-filename='reviseddataTog1.xlsx';
-writetable(Normal,filename,'Sheet',1,'Range','A1');
-
+%%
+filename='Cleaningschedule.xlsx';
+writetable(Cleaningschedule,filename,'Sheet',1,'Range','A1');
