@@ -89,6 +89,11 @@ for i = 1:height(Normaleuge2023(:,1))
         Or(i) = 12;
         Tr(i) = 60;
 
+        % WE DONT KNOW this one yet 
+        elseif Normaleuge2023{i,2} == 'EB'
+        Or(i) = 47;
+        Tr(i) = 175;
+
     end
 end
 
