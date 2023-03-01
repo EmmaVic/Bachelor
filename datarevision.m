@@ -115,8 +115,8 @@ for i = 1:height(Normaleuge2023(:,1))
 end
 
 
-for i = 1: length(in)
-   Normal(i,:) = [];
+for i = 0:length(in)-1
+   Normal(in(length(in)-i),:) = [];
 end
 
 

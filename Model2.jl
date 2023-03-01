@@ -119,6 +119,7 @@ if termination_status(m) == MOI.OPTIMAL
     println("xt ",i,"=", JuMP.value.(xt[i]))
     println("xo ",i,"=", JuMP.value.(xo[i]))
 end
+end
 else
     println("Optimize was not succesful. Return code: ", termination_status(m))
 end
