@@ -10,7 +10,7 @@ using DataFrames
 #  sh = xf["Sheet1"]
 
 # importerer excel ind som dataframe
-df = DataFrame(XLSX.readtable("reviseddataTog1.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
@@ -41,17 +41,20 @@ Dd = df.AfgangDato
 Tn = df.Tognr
 
 # vector of departure station
-Ds = df.Frastation
+Ds = df.FraStation
 
 # Lbsnr vector
-Ln = df.lbsnr
+Ln = df.Lbsnr
 
 # time of Tr cleaning on ERF train in minutes
-Tr = 80.0
-Or = 20.0
+Tr = df.Tr
+Or = df.Or
 
 # Procentage of Or cleaning to Tr cleaning
-q = Or/Tr
+q = zeros(N)
+for i in 1:N
+q[i] = Or[i]/Tr[i]
+end
 
 # vector of binary values saying if a cleaning can happen at given station
 Pc = (df.BinaryC)
@@ -88,23 +91,23 @@ M = C
 # constraints deciding if two trains are connected
 for i in 1:N
     for j in i+1:N
-        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
-            @constraint(xt[i] <= xt[j])
-            @constraint(xt[i] >= xt[j])
-            @constraint(xo[i] <= xt[j])
-            @constraint(xo[i] >= xt[j])
+        if isequal(Tn[i],Tn[j]) && isequal(Dd[i],Dd[j]) && isequal(Ds[i],Ds[j])
+            @constraint(m, xt[i] <= xt[j])
+            @constraint(m, xt[i] >= xt[j])
+            @constraint(m, xo[i] <= xt[j])
+            @constraint(m, xo[i] >= xt[j])
         end
     end
 end
 
 # constraint making sure KD is reset when a new day train
 for i in 2:N
-    if Ls[i] != Ls[i-1]
-        @constraint(KD[i] <= km[i])
-        @constraint(KD[i] >= km[i])
+    if Ln[i] != Ln[i-1]
+        @constraint(m, KD[i] .<= km[i])
+        @constraint(m, KD[i] .>= km[i])
     else
-        @constraint(KD[i] <= KD[i-1]+km[i]-zt[i]-q*zo[i])
-        @constraint(KD[i] >= KD[i-1]+km[i]-zt[i]-q*zo[i])
+        @constraint(m, KD[i] .<= KD[i-1]+km[i]-zt[i]-q[i]*zo[i])
+        @constraint(m, KD[i] .>= KD[i-1]+km[i]-zt[i]-q[i]*zo[i])
     end
 end
 
