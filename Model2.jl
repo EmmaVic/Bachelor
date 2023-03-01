@@ -5,11 +5,7 @@ using GLPK
 
 using DataFrames
 
-# importerer excel ind som worksheet
-#xf = XLSX.openxlsx("reviseddataTog1.xlsx")
-#  sh = xf["Sheet1"]
-
-# importerer excel ind som dataframe
+# importing excel in a dataframe
 df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
@@ -63,7 +59,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1200.0
+C = 1800.0
 
 # big M notation
 M = C
@@ -118,8 +114,11 @@ optimize!(m)
 # Printing the optimal solution
 if termination_status(m) == MOI.OPTIMAL
     println("Objective value: ", JuMP.objective_value.(m))
-    println("xt = ", JuMP.value.(xt))
-    println("xo = ", JuMP.value.(xo))
+    for i in 1:N
+    if JuMP.value(xt[i]) != 0.0
+    println("xt ",i,"=", JuMP.value.(xt[i]))
+    println("xo ",i,"=", JuMP.value.(xo[i]))
+end
 else
     println("Optimize was not succesful. Return code: ", termination_status(m))
 end
