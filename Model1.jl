@@ -2,7 +2,7 @@
 import XLSX
 using JuMP
 using GLPK
-
+using CSV
 using DataFrames
 
 # importerer excel ind som worksheet
@@ -54,7 +54,7 @@ C = 1200.0
 M = C
 
 # Objective function
-@objective(m, Min, sum(xt[i]*Tr + Or*xo[i] for i=1:N))
+@objective(m, Min, sum(xt[i]*Tr + xo[i]*Or for i=1:N))
 
 # constraints
 @constraint(m, KD[1] >= km[1])
@@ -85,3 +85,10 @@ if termination_status(m) == MOI.OPTIMAL
 else
     println("Optimize was not succesful. Return code: ", termination_status(m))
 end
+
+
+
+## wrighting the output out as an excel file
+df[!, :Xt]=JuMP.value.(xt)
+df[!, :Xo]=JuMP.value.(xo)
+XLSX.writetable("Solmodel1.xlsx", df, overwrite=true, sheetname="sheet1", anchor_cell="A1")
