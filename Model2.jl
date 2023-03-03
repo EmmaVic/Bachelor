@@ -59,7 +59,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1800.0
+C = 5000.0
 
 # big M notation
 M = C
@@ -92,11 +92,18 @@ for i in 1:N
             @constraint(m, xt[i] >= xt[j])
             @constraint(m, xo[i] <= xt[j])
             @constraint(m, xo[i] >= xt[j])
+
+            @constraint(m,  xt[i] * Tr[i] + xt[j] * Tr[j] .<= St[i])
+            @constraint(m,  xo[i] * Or[i] + xo[j] * Or[j] .<= St[i])
+        else
+            @constraint(m,  xt[i] * Tr[i] .<= St[i])
+            @constraint(m,  xo[i] * Or[i] .<= St[i])
+
         end
     end
 end
 
-# constraint making sure KD is reset when a new day train
+# constraint making sure KD is reset when a new train
 for i in 2:N
     if Ln[i] != Ln[i-1]
         @constraint(m, KD[i] .<= km[i])
