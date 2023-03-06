@@ -60,8 +60,7 @@ M = C
 @constraint(m, KD[1] >= km[1])
 @constraint(m, KD[1] <= km[1])
 @constraint(m, [i=1:N], xt[i] + xo[i] .<= Pc[i])
-@constraint(m, [i=1:N], xt[i] * Tr .<= St[i])
-@constraint(m, [i=1:N], xo[i] * Or .<= St[i])
+@constraint(m, [i=1:N], xt[i] * Tr +  xo[i] * Or .<= St[i])
 
 @constraint(m, [i=2:N], zt[i] .<= xt[i-1] * M)
 @constraint(m, [i=2:N], zo[i] .<= xo[i-1] * M)

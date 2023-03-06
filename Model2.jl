@@ -1,8 +1,7 @@
-
 import XLSX
 using JuMP
 using GLPK
-
+using CSV
 using DataFrames
 
 # importing excel in a dataframe
@@ -59,7 +58,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 5000.0
+C = 2000.0
 
 # big M notation
 M = C
@@ -71,8 +70,6 @@ M = C
 @constraint(m, KD[1] >= km[1])
 @constraint(m, KD[1] <= km[1])
 @constraint(m, [i=1:N], xt[i] + xo[i] .<= Pc[i])
-@constraint(m, [i=1:N], xt[i] * Tr[i] .<= St[i])
-@constraint(m, [i=1:N], xo[i] * Or[i] .<= St[i])
 
 @constraint(m, [i=2:N], zt[i] .<= xt[i-1] * M)
 @constraint(m, [i=2:N], zo[i] .<= xo[i-1] * M)
@@ -86,18 +83,19 @@ M = C
 
 # constraints deciding if two trains are connected
 for i in 1:N
-    for j in i+1:N
-        if isequal(Tn[i],Tn[j]) && isequal(Dd[i],Dd[j]) && isequal(Ds[i],Ds[j])
-            @constraint(m, xt[i] <= xt[j])
-            @constraint(m, xt[i] >= xt[j])
-            @constraint(m, xo[i] <= xt[j])
-            @constraint(m, xo[i] >= xt[j])
+    for j in (i+1):N
+        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
+            @constraint(m, xt[i] .<= xt[j])
+            @constraint(m, xt[i] .>= xt[j])
+            @constraint(m, xo[i] .<= xt[j])
+            @constraint(m, xo[i] .>= xt[j])
 
-            @constraint(m,  xt[i] * Tr[i] + xt[j] * Tr[j] .<= St[i])
-            @constraint(m,  xo[i] * Or[i] + xo[j] * Or[j] .<= St[i])
-        else
             @constraint(m,  xt[i] * Tr[i] .<= St[i])
             @constraint(m,  xo[i] * Or[i] .<= St[i])
+            @constraint(m,  xt[j] * Tr[j] .<= St[i])
+            @constraint(m,  xo[j] * Or[j] .<= St[i])
+        else
+            @constraint(m,  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
 
         end
     end
@@ -118,15 +116,9 @@ end
 # Optimizing the model
 optimize!(m)
 
-# Printing the optimal solution
-if termination_status(m) == MOI.OPTIMAL
-    println("Objective value: ", JuMP.objective_value.(m))
-    for i in 1:N
-    if JuMP.value(xt[i]) != 0.0
-    println("xt ",i,"=", JuMP.value.(xt[i]))
-    println("xo ",i,"=", JuMP.value.(xo[i]))
-end
-end
-else
-    println("Optimize was not succesful. Return code: ", termination_status(m))
-end
+println( termination_status(m))
+
+# wrighting the output out as an excel file
+df[!, :Xt]=JuMP.value.(xt)
+df[!, :Xo]=JuMP.value.(xo)
+XLSX.writetable("Solmodel2.xlsx", df, overwrite=true, sheetname="sheet1", anchor_cell="A1")
