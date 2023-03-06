@@ -91,7 +91,7 @@ for i in 1:N
             @constraint(m, xo[i] .>= xo[j])
 
             @constraint(m,  xt[i] * Tr[i] + xo[i] * Or[i] .<= St[i])
-            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[i])
+            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[j])
         else
             @constraint(m,  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
 
