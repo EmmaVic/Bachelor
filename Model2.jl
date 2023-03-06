@@ -87,13 +87,11 @@ for i in 1:N
         if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
             @constraint(m, xt[i] .<= xt[j])
             @constraint(m, xt[i] .>= xt[j])
-            @constraint(m, xo[i] .<= xt[j])
-            @constraint(m, xo[i] .>= xt[j])
+            @constraint(m, xo[i] .<= xo[j])
+            @constraint(m, xo[i] .>= xo[j])
 
-            @constraint(m,  xt[i] * Tr[i] .<= St[i])
-            @constraint(m,  xo[i] * Or[i] .<= St[i])
-            @constraint(m,  xt[j] * Tr[j] .<= St[i])
-            @constraint(m,  xo[j] * Or[j] .<= St[i])
+            @constraint(m,  xt[i] * Tr[i] + xo[i] * Or[i] .<= St[i])
+            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[i])
         else
             @constraint(m,  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
 
