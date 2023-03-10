@@ -82,23 +82,22 @@ M = C
 
 
 # constraints deciding if two trains are connected
-#for i in 1:N
-#    for j in (i+1):N
-#        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
-#            @constraint(m, xt[i] .<= xt[j])
-#            @constraint(m, xt[i] .>= xt[j])
-#            @constraint(m, xo[i] .<= xo[j])
-#            @constraint(m, xo[i] .>= xo[j])
-#
-#            @constraint(m,  xt[i] * Tr[i] + xo[i] * Or[i] .<= St[i])
-#            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[j])
-#        else
-#            @constraint(m,  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
-#
-#        end
-#    end
-#end
-@constraint(m,  [i=1:N],  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
+for i in 1:N
+    for j in (i+1):N
+        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
+            @constraint(m, xt[i] .<= xt[j])
+            @constraint(m, xt[i] .>= xt[j])
+            @constraint(m, xo[i] .<= xo[j])
+            @constraint(m, xo[i] .>= xo[j])
+
+            @constraint(m,  xt[i] * Tr[i] + xo[i] * Or[i] .<= St[i])
+            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[j])
+        else
+            @constraint(m,  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
+
+        end
+    end
+end
 
 # constraint making sure KD is reset when a new train
 for i in 2:N
@@ -117,7 +116,7 @@ optimize!(m)
 
 println( termination_status(m))
 
-# wrighting the output out as an excel file
-#df[!, :Xt]=JuMP.value.(xt)
-#df[!, :Xo]=JuMP.value.(xo)
-#XLSX.writetable("Solmodel2.xlsx", df, overwrite=true, sheetname="sheet1", anchor_cell="A1")
+ wrighting the output out as an excel file
+df[!, :Xt]=JuMP.value.(xt)
+df[!, :Xo]=JuMP.value.(xo)
+XLSX.writetable("Solmodel2.xlsx", df, overwrite=true, sheetname="sheet1", anchor_cell="A1")
