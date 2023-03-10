@@ -52,40 +52,40 @@ Normal=[Normal(:,1:7) Stoptable Normal(:,8:11)];
 
 %% Creating Or and Tr for each station 
 
-for i = 1:height(Normaleuge2023(:,1))
-    if Normaleuge2023{i,2} == 'ABS' || Normaleuge2023{i,2} == 'B' || Normaleuge2023{i,2} == 'BK'
+for i = 1:height(Normal(:,1))
+    if Normal{i,2} == 'ABS' || Normal{i,2} == 'B' || Normal{i,2} == 'BK'
         Or(i) = 47;
         Tr(i) = 175;
 
-        elseif Normaleuge2023{i,2} == 'ERF'
+        elseif Normal{i,2} == 'ERF'
         Or(i) = 20;
         Tr(i) = 80;
 
-        elseif Normaleuge2023{i,2} == 'ETS'
+        elseif Normal{i,2} == 'ETS'
         Or(i) = 15;
         Tr(i) = 104;
 
-        elseif Normaleuge2023{i,2} == 'ICA' || Normaleuge2023{i,2} == 'ICU'
+        elseif Normal{i,2} == 'ICA' || Normal{i,2} == 'ICU'
         Or(i) = 16;
         Tr(i) = 72;
 
-        elseif Normaleuge2023{i,2} == 'ICED'
+        elseif Normal{i,2} == 'ICED'
         Or(i) = 39;
         Tr(i) = 125;
 
-        elseif Normaleuge2023{i,2} == 'MGA'
+        elseif Normal{i,2} == 'MGA'
         Or(i) = 20;
         Tr(i) = 109;
 
-        elseif Normaleuge2023{i,2} == 'MPA'
+        elseif Normal{i,2} == 'MPA'
         Or(i) = 11;
         Tr(i) = 56;
 
-        elseif Normaleuge2023{i,2} == 'MQ' || Normaleuge2023{i,2} == 'MQS'
+        elseif Normal{i,2} == 'MQ' || Normal{i,2} == 'MQS'
         Or(i) = 12;
         Tr(i) = 56;
 
-        elseif Normaleuge2023{i,2} == 'MR'
+        elseif Normal{i,2} == 'MR'
         Or(i) = 12;
         Tr(i) = 60;
 
@@ -104,7 +104,7 @@ Normal=[Normal ORtable];
 in = [];
 j = 1;
 
-for i = 1:height(Normaleuge2023(:,1))
+for i = 1:height(Normal(:,1))
     if Normal{i,2} == 'EB' || Normal{i,2} == 'EA' || Normal{i,2} == 'ME'
         in(j) = i;
         j = j+1;
