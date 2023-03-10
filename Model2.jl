@@ -1,6 +1,6 @@
 import XLSX
 using JuMP
-using GLPK
+using Gurobi
 using CSV
 using DataFrames
 
@@ -10,7 +10,7 @@ df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 # julia kører rækker , søjler
 ##
 # Mathematical model
-m = Model(GLPK.Optimizer)
+m = Model(Gurobi.Optimizer)
 
 # number of trains
 N = length(df.Litra)
