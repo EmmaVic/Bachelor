@@ -1,6 +1,6 @@
 import XLSX
 using JuMP
-using GLPK
+using Gurobi
 using CSV
 using DataFrames
 
@@ -10,7 +10,7 @@ df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 # julia kører rækker , søjler
 ##
 # Mathematical model
-m = Model(GLPK.Optimizer)
+m = Model(Gurobi.Optimizer)
 
 # number of trains
 N = length(df.Litra)
@@ -58,7 +58,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 2000.0
+C = 1200.0
 
 # big M notation
 M = C
@@ -114,9 +114,9 @@ end
 # Optimizing the model
 optimize!(m)
 
-println( termination_status(m))
+println( JuMP.objective_value.(m))
 
- wrighting the output out as an excel file
+# wrighting the output out as an excel file
 df[!, :Xt]=JuMP.value.(xt)
 df[!, :Xo]=JuMP.value.(xo)
 XLSX.writetable("Solmodel2.xlsx", df, overwrite=true, sheetname="sheet1", anchor_cell="A1")
