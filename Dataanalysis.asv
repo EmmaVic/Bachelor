@@ -56,8 +56,6 @@ end
 % Number of cleanings in total
 index = [];
 antal = 0;
-antalTR = 0;
-antalOR = 0;
 j = 1;
 
 for i = 1: height(Normal{:,1})
@@ -65,14 +63,6 @@ for i = 1: height(Normal{:,1})
         antal = antal+1;
         index(j) = i;
         j = j+1;
-    end
-end
-
-for i = 1: height(Normal{:,1})
-    if Normal{i,5} == "TR"
-        antalTR = antalTR+1;
-    elseif Normal{i,5} == "OR"
-        antalOR = antalOR+1;
     end
 end
 
