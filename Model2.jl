@@ -5,7 +5,7 @@ using CSV
 using DataFrames
 
 # importing excel in a dataframe
-df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddata5xTog.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
@@ -82,22 +82,22 @@ M = C
 
 
 # constraints deciding if two trains are connected
-for i in 1:N
-    for j in (i+1):N
-        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
-            @constraint(m, xt[i] .<= xt[j])
-            @constraint(m, xt[i] .>= xt[j])
-            @constraint(m, xo[i] .<= xo[j])
-            @constraint(m, xo[i] .>= xo[j])
+#for i in 1:N
+#    for j in (i+1):N
+#        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
+#            @constraint(m, xt[i] .<= xt[j])
+#            @constraint(m, xt[i] .>= xt[j])
+#            @constraint(m, xo[i] .<= xo[j])
+#            @constraint(m, xo[i] .>= xo[j])
 
-            @constraint(m,  xt[i] * Tr[i] + xo[i] * Or[i] .<= St[i])
-            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[j])
-        else
-            @constraint(m,  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
+#            @constraint(m,  xt[i] * Tr[i] + xo[i] * Or[i] .<= St[i])
+#            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[j])
+#        else
+#            @constraint(m,  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
 
-        end
-    end
-end
+#        end
+#    end
+#end
 
 # constraint making sure KD is reset when a new train
 for i in 2:N
