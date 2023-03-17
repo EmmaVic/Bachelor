@@ -48,7 +48,7 @@ Or = df.Or
 # Procentage of Or cleaning to Tr cleaning
 q = zeros(N)
 for i in 1:N
-q[i] = Or[i]/Tr[i]
+    q[i] = Or[i]/Tr[i]
 end
 
 # vector of binary values saying if a cleaning can happen at given station
@@ -67,8 +67,8 @@ M = C
 @objective(m, Min, sum(xt[i]*Tr[i] + Or[i]*xo[i] for i=1:N))
 
 # constraints
-@constraint(m, KD[1] >= km[1])
-@constraint(m, KD[1] <= km[1])
+@constraint(m, KD[1] .>= km[1])
+@constraint(m, KD[1] .<= km[1])
 @constraint(m, [i=1:N], xt[i] + xo[i] .<= Pc[i])
 
 @constraint(m, [i=2:N], zt[i] .<= xt[i-1] * M)
@@ -82,22 +82,20 @@ M = C
 
 
 # constraints deciding if two trains are connected
-#for i in 1:N
-#    for j in (i+1):N
-#        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
-#            @constraint(m, xt[i] .<= xt[j])
-#            @constraint(m, xt[i] .>= xt[j])
-#            @constraint(m, xo[i] .<= xo[j])
-#            @constraint(m, xo[i] .>= xo[j])
+for i in 1:N
+    for j in (i+1):N
+        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
+            @constraint(m, xt[i] .<= xt[j])
+            @constraint(m, xt[i] .>= xt[j])
+            @constraint(m, xo[i] .<= xo[j])
+            @constraint(m, xo[i] .>= xo[j])
 
-#            @constraint(m,  xt[i] * Tr[i] + xo[i] * Or[i] .<= St[i])
-#            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[j])
-#        else
-#            @constraint(m,  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
+            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[j])
 
-#        end
-#    end
-#end
+        end
+    end
+end
+@constraint(m, [i=1:N],  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
 
 # constraint making sure KD is reset when a new train
 for i in 2:N
