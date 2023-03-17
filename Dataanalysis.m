@@ -99,3 +99,26 @@ for i = 1: height(Normal{:,1})
         NumberTR = NumberTR+1;
     end
 end
+
+% Number of km for each train 
+numberKM = [];
+numberKMindex = [];
+q = 1;
+
+for i = 1: height(Normal{:,1})-1
+    if Normal{i,11} > Normal{i+1,11}
+        numberKM(q) = Normal{i,11};
+        numberKMindex(q) = i;
+        q = q+1;
+    end
+end
+
+[M,I] = max(numberKM)
+
+% Number of trains
+numberTrain = 0;
+for i = 1: height(Normal{:,1})-1
+    if Normal{i,1} ~= Normal{i+1,1}
+       numberTrain = numberTrain+1;
+    end
+end
