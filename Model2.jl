@@ -5,7 +5,7 @@ using CSV
 using DataFrames
 
 # importing excel in a dataframe
-df = DataFrame(XLSX.readtable("reviseddata5xTog.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddata10xTog.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
@@ -58,7 +58,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1900.0
+C = 1800.0
 
 # big M notation
 M = C
@@ -78,24 +78,25 @@ M = C
 @constraint(m, [i=2:N], zt[i] .>= KD[i-1] - (1 - xt[i-1]) * M)
 @constraint(m, [i=2:N], zo[i] .>=  KD[i-1] - (1 - xo[i-1]) * M)
 
+@constraint(m, [i=1:N],  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
+
 @constraint(m, [i=1:N], KD[i] .<= C)
 
 
 # constraints deciding if two trains are connected
+
 for i in 1:N
     for j in (i+1):N
-        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j]
+        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j] && St[i]==St[j]
             @constraint(m, xt[i] .<= xt[j])
             @constraint(m, xt[i] .>= xt[j])
             @constraint(m, xo[i] .<= xo[j])
             @constraint(m, xo[i] .>= xo[j])
 
-            @constraint(m,  xt[j] * Tr[j] + xo[j] * Or[j] .<= St[j])
-
         end
     end
 end
-@constraint(m, [i=1:N],  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
+
 
 # constraint making sure KD is reset when a new train
 for i in 2:N
