@@ -40,17 +40,19 @@ for i=1:height(Normal(:,1))-1
 
 Stoptime(i)=minutes(Normal{i+1,6}-Normal{i,7});
 
-% tjekker om der starter nyt lbs nr
- if Normal{i,1} ~= Normal{i+1,1}
-             Stoptime(i)=0;
- end
-
-
-
 %tjekker om negativ, da det så er et nyt døgn
 if Stoptime(i)<0
     Stoptime(i)=24*60+Stoptime(i);
 end
+
+end
+
+for i=1:height(Normal(:,1))-1
+    for j=i:height(Normal(:,1))
+        if Normal{i,1} ~= Normal{j,1}
+            Stoptime(j)=0;
+        end
+    end
 end
 
 Stoptable=array2table(Stoptime','VariableNames',{'StopTime'});
