@@ -5,7 +5,7 @@ using CSV
 using DataFrames
 
 # importing excel in a dataframe
-df = DataFrame(XLSX.readtable("reviseddata10xTog.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddata5xTog.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
@@ -84,14 +84,14 @@ M = C
 
 
 # constraints deciding if two trains are connected
-
 for i in 1:(N-1)
     for j in (i+1):N
         if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j] && St[i]==St[j]
-            @constraint(m, xt[i] .<= xt[j])
-            @constraint(m, xt[i] .>= xt[j])
-            @constraint(m, xo[i] .<= xo[j])
-            @constraint(m, xo[i] .>= xo[j])
+            @constraint(m, xt[i]-xt[j]<=0)
+            @constraint(m, xt[j]-xt[i]<=0)
+            @constraint(m, xo[i]-xo[j]<=0)
+            @constraint(m, xo[j]-xo[i]<=0)
+
 
         end
     end
