@@ -58,7 +58,7 @@ Pc = (df.BinaryC)
 St =  (df.StopTime)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 2000.0
+C = 1500.0
 
 # big M notation
 M = C
@@ -84,18 +84,17 @@ M = C
 
 
 # constraints deciding if two trains are connected
+#for i in 1:(N-1)
+#    for j in (i+1):N
+#        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j] && St[i]==St[j]
+#            @constraint(m, xt[i] .<= xt[j])
+#            @constraint(m, xt[i] .>= xt[j])
+#            @constraint(m, xo[i] .<= xo[j])
+#            @constraint(m, xo[i] .>= xo[j])
 
-for i in 1:(N-1)
-    for j in (i+1):N
-        if Tn[i]==Tn[j] && Dd[i]==Dd[j] && Ds[i]==Ds[j] && St[i]==St[j]
-            @constraint(m, xt[i] .<= xt[j])
-            @constraint(m, xt[i] .>= xt[j])
-            @constraint(m, xo[i] .<= xo[j])
-            @constraint(m, xo[i] .>= xo[j])
-
-        end
-    end
-end
+#        end
+#    end
+#end
 
 
 # constraint making sure KD is reset when a new train
