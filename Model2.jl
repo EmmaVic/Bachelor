@@ -5,12 +5,22 @@ using CSV
 using DataFrames
 
 # importing excel in a dataframe
-df = DataFrame(XLSX.readtable("reviseddata5xTog.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
 # Mathematical model
 m = Model(Gurobi.Optimizer)
+
+# time limit
+set_time_limit_sec(m, 600)
+
+# max cutoff of kilometers of dirtyness, in km
+C = 1500.0
+
+# big M notation
+M = C
+
 
 # number of trains
 N = length(df.Litra)
@@ -24,7 +34,7 @@ N = length(df.Litra)
 @variable(m, zo[1:N] >= 0 )
 
 # initializing variable KD for "kilometers of dirtyness"
-@variable(m, KD[1:N] >= 0)
+@variable(m, KD[1:N] >= 0, upper_bound=C)
 
 # vector of kilometers between each stop
 km =  (df.Km)
@@ -57,12 +67,6 @@ Pc = (df.BinaryC)
 # vector of stoptime on each stop
 St =  (df.StopTime)
 
-# max cutoff of kilometers of dirtyness, in km
-C = 1500.0
-
-# big M notation
-M = C
-
 # Objective function
 @objective(m, Min, sum(xt[i]*Tr[i] + Or[i]*xo[i] for i=1:N))
 
@@ -80,7 +84,6 @@ M = C
 
 @constraint(m, [i=1:N],  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
 
-@constraint(m, [i=1:N], KD[i] .<= C)
 
 
 # constraints deciding if two trains are connected
@@ -108,6 +111,9 @@ for i in 2:N
         @constraint(m, KD[i] .>= KD[i-1]+km[i]-zt[i]-q[i]*zo[i])
     end
 end
+
+
+
 
 
 # Optimizing the model
