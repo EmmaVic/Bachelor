@@ -5,7 +5,7 @@ using CSV
 using DataFrames
 
 # importing excel in a dataframe
-df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddata5xTog.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
@@ -16,7 +16,7 @@ m = Model(Gurobi.Optimizer)
 set_time_limit_sec(m, 600)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1500.0
+C = 1800.0
 
 # big M notation
 M = C
@@ -112,8 +112,16 @@ for i in 2:N
     end
 end
 
-
-
+# constraint setting a Tr cleaning the first time possible on each day
+for i in 1:N-2
+    if Dd[i] != Dd[i+1] && Dd[i+1] != Dd[1]
+        k=i+1
+            while Pc[k] != 1 || St[k] < Tr[k]
+                k = k + 1
+            end
+        @constraint(m, xt[k] .>= 1)
+    end
+end
 
 
 # Optimizing the model
@@ -124,4 +132,4 @@ println( JuMP.objective_value.(m))
 # wrighting the output out as an excel file
 df[!, :Xt]=JuMP.value.(xt)
 df[!, :Xo]=JuMP.value.(xo)
-XLSX.writetable("Solmodel2.xlsx", df, overwrite=true, sheetname="sheet1", anchor_cell="A1")
+XLSX.writetable("Solmodel3.xlsx", df, overwrite=true, sheetname="sheet1", anchor_cell="A1")
