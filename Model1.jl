@@ -10,7 +10,7 @@ using DataFrames
 #  sh = xf["Sheet1"]
 
 # importerer excel ind som dataframe
-df = DataFrame(XLSX.readtable("reviseddataTog1.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddataAll.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
@@ -34,12 +34,15 @@ N = length(df.Litra)
 # vector of kilometers between each stop
 km =  (df.Km)
 
-# time of Tr cleaning on ERF train in minutes
-Tr = 80.0
-Or = 20.0
+# time of Tr and Or cleaning in minutes
+Tr = df.Tr
+Or = df.Or
 
 # Procentage of Or cleaning to Tr cleaning
-q = Or/Tr
+q = zeros(N)
+for i in 1:N
+    q[i] = Or[i]/Tr[i]
+end
 
 # vector of binary values saying if a cleaning can happen at given station
 Pc = (df.BinaryC)
@@ -69,9 +72,21 @@ M = C
 @constraint(m, [i=2:N], zt[i] .>= KD[i-1] - (1 - xt[i-1]) * M)
 @constraint(m, [i=2:N], zo[i] .>=  KD[i-1] - (1 - xo[i-1]) * M)
 
-@constraint(m, [i=2:N], KD[i] .>= KD[i-1] + km[i] - zt[i]-q*zo[i])
-@constraint(m, [i=2:N], KD[i] .<= KD[i-1] + km[i] - zt[i]-q*zo[i])
 @constraint(m, [i=1:N], KD[i] .<= C)
+
+# constraint making sure KD is reset when a new train
+for i in 2:N
+    if Ln[i] != Ln[i-1]
+        @constraint(m, KD[i] .<= km[i])
+        @constraint(m, KD[i] .>= km[i])
+    else
+        @constraint(m, KD[i] .<= KD[i-1]+km[i]-zt[i]-q[i]*zo[i])
+        @constraint(m, KD[i] .>= KD[i-1]+km[i]-zt[i]-q[i]*zo[i])
+    end
+end
+
+
+
 
 # Optimizing the model
 optimize!(m)
