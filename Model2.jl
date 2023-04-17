@@ -113,9 +113,6 @@ for i in 2:N
 end
 
 
-
-
-
 # Optimizing the model
 optimize!(m)
 
