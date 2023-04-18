@@ -15,11 +15,8 @@ m = Model(Gurobi.Optimizer)
 # time limit
 set_time_limit_sec(m, 600)
 
-# max cutoff of kilometers of dirtyness, in km
-C = 1300.0
-
 # big M notation
-M = C
+M = 1700
 
 
 # number of trains
@@ -30,11 +27,11 @@ N = length(df.Litra)
 @variable(m, xo[1:N], Bin)
 
 # variable to linearize constraint
-@variable(m, zt[1:N] >= 0, upper_bound=C)
-@variable(m, zo[1:N] >= 0, upper_bound=C)
+@variable(m, zt[1:N] >= 0, upper_bound = M)
+@variable(m, zo[1:N] >= 0, upper_bound = M)
 
 # initializing variable KD for "kilometers of dirtyness"
-@variable(m, KD[1:N] >= 0, upper_bound=C)
+@variable(m, KD[1:N] >= 0)
 
 # vector of kilometers between each stop
 km =  (df.Km)
@@ -50,6 +47,9 @@ Ds = df.FraStation
 
 # Lbsnr vector
 Ln = df.Lbsnr
+
+# C-value vector
+C = df.Cvalues
 
 # time of Tr and Or cleaning in minutes
 Tr = df.Tr
@@ -84,7 +84,7 @@ St =  (df.StopTime)
 
 @constraint(m, [i=1:N],  xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
 
-
+@constraint(m, [i=1:N], KD[i] .<= C[i])
 
 # constraints deciding if two trains are connected
 for i in 1:(N-1)
@@ -113,16 +113,31 @@ for i in 2:N
 end
 
 # constraint setting a Tr cleaning the first time possible on each day
+#for i in 1:N-2
+#    if Dd[i] != Dd[i+1] && Dd[i+1] != Dd[1]
+#        k=i+1
+#            while Pc[k] != 1 || St[k] < Tr[k]
+#                k = k + 1
+#            end
+#        @constraint(m, xt[k] .>= 1)
+#    end
+#end
+
 for i in 1:N-2
     if Dd[i] != Dd[i+1] && Dd[i+1] != Dd[1]
         k=i+1
-            while Pc[k] != 1 || St[k] < Tr[k]
+        while Dd[k] == Dd[k+1]  && k < N-1
+            if  Pc[k] != 1 || St[k] < Tr[k]
                 k = k + 1
+            elseif Pc[k] == 1 && St[k] >= Tr[k]
+                @constraint(m, xt[k] .>= 1)
+                break
+            else
+                break
             end
-        @constraint(m, xt[k] .>= 1)
+        end
     end
 end
-
 
 # Optimizing the model
 optimize!(m)

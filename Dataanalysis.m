@@ -140,7 +140,8 @@ Litra2 = Normal(1804:2551,:);
 Litra3 = Normal(2552:6758,:);
 Litra4 = Normal(6759:7859,:);
 Litra5 = Normal(7860:8922,:);
-Litra6 = Normal(8923:end,:);
+Litra6 = Normal(8923:11575,:);
+Litra7 = Normal(11576:end,:);
 
 indexL1 = []; antalL1 = 0; L1 = 1;
 indexL2 = []; antalL2 = 0; L2 = 1; 
@@ -148,7 +149,7 @@ indexL3 = []; antalL3 = 0; L3 = 1;
 indexL4 = []; antalL4 = 0; L4 = 1; 
 indexL5 = []; antalL5 = 0; L5 = 1; 
 indexL6 = []; antalL6 = 0; L6 = 1;
-j = 1;
+indexL7 = []; antalL7 = 0; L7 = 1;
 
 for i = 1: height(Litra1{:,1})
     if Litra1{i,5} == "TR" || Litra1{i,5} == "OR"
@@ -198,12 +199,21 @@ for i = 1: height(Litra6{:,1})
     end
 end
 
+for i = 1: height(Litra7{:,1})
+    if Litra7{i,5} == "TR" || Litra7{i,5} == "OR"
+        antalL7 = antalL7+1;
+        indexL7(L7) = i;
+        L7 = L7+1;
+    end
+end
+
 KmBetweenL1 = [];
 KmBetweenL2 = [];
 KmBetweenL3 = [];
 KmBetweenL4 = [];
 KmBetweenL5 = [];
 KmBetweenL6 = [];
+KmBetweenL7 = [];
 
 for i = 1:length(indexL1)-1
     if Litra1{indexL1(i),1} == Litra1{indexL1(i+1),1}
@@ -241,6 +251,57 @@ for i = 1:length(indexL6)-1
     end
 end
 
+for i = 1:length(indexL7)-1
+    if Litra7{indexL7(i),1} == Litra7{indexL7(i+1),1}
+        KmBetweenL7(i) = sum(Litra7{indexL7(i):indexL7(i+1),10});
+    end
+end
+
+numberL1
 max(nonzeros(KmBetweenL1))
 min(nonzeros(KmBetweenL1))
 mean(nonzeros(KmBetweenL1))
+
+%% Creating Or and Tr for each station 
+
+for i = 1:height(Normal(:,1))
+    if Normal{i,2} == 'ABS' || Normal{i,2} == 'B' || Normal{i,2} == 'BK'
+        Or(i) = 47;
+        Tr(i) = 175;
+
+        elseif Normal{i,2} == 'ERF'
+        Or(i) = 20;
+        Tr(i) = 80;
+
+        elseif Normal{i,2} == 'ETS'
+        Or(i) = 15;
+        Tr(i) = 104;
+
+        elseif Normal{i,2} == 'ICA' 
+        Or(i) = 16;
+        Tr(i) = 72;
+
+        elseif Normal{i,2} == 'MGA'
+        Or(i) = 20;
+        Tr(i) = 109;
+
+
+    end
+end
+
+TRtable=array2table(Tr','VariableNames',{'Tr'});
+Normal=[Normal TRtable];
+
+ORtable=array2table(Or','VariableNames',{'Or'});
+Normal=[Normal ORtable];
+
+%% Calculatng the objective value with their soultion 
+Z = 0; 
+
+for i = 1:height(Normal(:,1))
+    if Normal{i,5} == "TR" 
+        Z = Z + Normal{i,13};
+    elseif Normal{i,5} == "OR"
+        Z = Z + Normal{i,14};
+    end
+end
