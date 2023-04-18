@@ -1,7 +1,7 @@
 
 import XLSX
 using JuMP
-using GLPK
+using Gurobi
 using CSV
 using DataFrames
 
@@ -10,12 +10,12 @@ using DataFrames
 #  sh = xf["Sheet1"]
 
 # importerer excel ind som dataframe
-df = DataFrame(XLSX.readtable("reviseddataAll.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
 # Mathematical model
-m = Model(GLPK.Optimizer)
+m = Model(Gurobi.Optimizer)
 
 # number of trains
 N = length(df.Litra)
@@ -25,11 +25,11 @@ N = length(df.Litra)
 @variable(m, xo[1:N], Bin)
 
 # variable to linearize constraint
-@variable(m, zt[1:N] >= 0 )
-@variable(m, zo[1:N] >= 0 )
+@variable(m, zt[1:N] .>= 0 )
+@variable(m, zo[1:N] .>= 0 )
 
 # initializing variable KD for "kilometers of dirtyness"
-@variable(m, KD[1:N] >= 0)
+@variable(m, KD[1:N] .>= 0)
 
 # vector of kilometers between each stop
 km =  (df.Km)
@@ -50,20 +50,24 @@ Pc = (df.BinaryC)
 # vector of stoptime on each stop
 St =  (df.StopTime)
 
+# Lbsnr vector
+Ln = df.Lbsnr
+
 # max cutoff of kilometers of dirtyness, in km
-C = 1200.0
+C = 1600.0
 
 # big M notation
 M = C
 
 # Objective function
-@objective(m, Min, sum(xt[i]*Tr + xo[i]*Or for i=1:N))
+@objective(m, Min, sum(xt[i]*Tr[i] + Or[i]*xo[i] for i=1:N))
+
 
 # constraints
-@constraint(m, KD[1] >= km[1])
-@constraint(m, KD[1] <= km[1])
+@constraint(m, KD[1] .>= km[1])
+@constraint(m, KD[1] .<= km[1])
 @constraint(m, [i=1:N], xt[i] + xo[i] .<= Pc[i])
-@constraint(m, [i=1:N], xt[i] * Tr +  xo[i] * Or .<= St[i])
+@constraint(m, [i=1:N], xt[i] * Tr[i] +  xo[i] * Or[i] .<= St[i])
 
 @constraint(m, [i=2:N], zt[i] .<= xt[i-1] * M)
 @constraint(m, [i=2:N], zo[i] .<= xo[i-1] * M)
@@ -94,8 +98,6 @@ optimize!(m)
 # Printing the optimal solution
 if termination_status(m) == MOI.OPTIMAL
     println("Objective value: ", JuMP.objective_value.(m))
-    println("xt = ", JuMP.value.(xt))
-    println("xo = ", JuMP.value.(xo))
 else
     println("Optimize was not succesful. Return code: ", termination_status(m))
 end

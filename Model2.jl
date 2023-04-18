@@ -95,7 +95,6 @@ for i in 1:(N-1)
             @constraint(m, xo[i]-xo[j]<=0)
             @constraint(m, xo[j]-xo[i]<=0)
 
-
         end
     end
 end
