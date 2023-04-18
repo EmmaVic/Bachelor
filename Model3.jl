@@ -5,7 +5,7 @@ using CSV
 using DataFrames
 
 # importing excel in a dataframe
-df = DataFrame(XLSX.readtable("reviseddata5xTog.xlsx","Sheet1"))
+df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 
 # julia kører rækker , søjler
 ##
@@ -16,7 +16,7 @@ m = Model(Gurobi.Optimizer)
 set_time_limit_sec(m, 600)
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1800.0
+C = 1300.0
 
 # big M notation
 M = C
@@ -51,7 +51,7 @@ Ds = df.FraStation
 # Lbsnr vector
 Ln = df.Lbsnr
 
-# time of Tr cleaning on ERF train in minutes
+# time of Tr and Or cleaning in minutes
 Tr = df.Tr
 Or = df.Or
 
