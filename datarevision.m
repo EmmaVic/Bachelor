@@ -128,12 +128,8 @@ end
 
 %% exporting table to excel
 
-filename='reviseddata5xTog.xlsx';
+filename='reviseddataAllData.xlsx';
 writetable(Normal,filename,'Sheet',1,'Range','A1');
-
-
-
-
 
 
 

@@ -128,11 +128,11 @@ end
 
 tal = 0;
 info = [];
-for i = 1:height(Normal(:,1))-1
-    if Normal{i,2}~=Normal{i+1,2}
-        tal = tal + 1; 
-        info(tal)=i+1;
-    end
+for i = 1:height(Normal(:,1))-1;
+if Normal{i,2}~=Normal{i+1,2}
+tal = tal + 1; 
+info(tal)=i+1;
+end
 end
 
 Litra1 = Normal(1:1803,:);
@@ -197,7 +197,7 @@ for i = 1: height(Litra6{:,1})
         L6 = L6+1;
     end
 end
-
+%% 
 KmBetweenL1 = [];
 KmBetweenL2 = [];
 KmBetweenL3 = [];
