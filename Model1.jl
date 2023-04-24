@@ -54,7 +54,7 @@ St =  (df.StopTime)
 Ln = df.Lbsnr
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1600.0
+C = 1638.0
 
 # big M notation
 M = C
