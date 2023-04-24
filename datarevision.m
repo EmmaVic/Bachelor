@@ -138,7 +138,7 @@ for i = 1:height(Normal(:,1))
         Cvalue(i) = 1243;
 
         elseif Normal{i,2} == 'ICA'
-        Cvalue(i) = 1209;
+        Cvalue(i) = 1519;
 
         elseif Normal{i,2} == 'MGA'
         Cvalue(i) = 1291;

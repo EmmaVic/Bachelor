@@ -52,8 +52,33 @@ end
 
 %% The analysis
 
+%% New calculation of the kilometers between cleanings
 
-% Number of cleanings in total
+j = 1; 
+vector = [];
+kmCount = 0;
+
+for i = 1:height(Normal(:,1))-1
+    if Normal{i,1} == Normal{i+1,1}
+        if Normal{i,5} == "TR" || Normal{i,5} == "OR"
+        vector(j) = kmCount;
+        j = j+1; 
+        kmCount = Normal{i,10};
+        elseif Normal{i,5} ~= "TR" || Normal{i,5} ~= "OR"
+        kmCount = kmCount + Normal{i,10};
+        end
+    elseif Normal{i,1} ~= Normal{i+1,1}
+        vector(j) = kmCount + Normal{i,10} ; 
+        j = j+1; 
+        kmCount = 0;
+    end
+end
+
+max(nonzeros(vector))
+min(nonzeros(vector))
+mean(nonzeros(vector))
+
+%% Number of cleanings in total
 index = [];
 antal = 0;
 antalTR = 0;
@@ -76,6 +101,104 @@ for i = 1: height(Normal{:,1})
     end
 end
 
+%% The different litra types 
+
+Litra1 = Normal(1:1803,:);
+Litra2 = Normal(1804:2551,:);
+Litra3 = Normal(2552:6758,:);
+Litra4 = Normal(6759:7859,:);
+Litra5 = Normal(7860:8922,:);
+Litra6 = Normal(8923:11575,:);
+Litra7 = Normal(11576:end,:);
+
+%% max, min and mean on the different litratypes
+
+j = 1; 
+vector = [];
+kmCount = 0;
+
+Litra = Litra7;
+
+for i = 1:height(Litra(:,1))-1
+    if Litra{i,1} == Litra{i+1,1}
+        if Litra{i,5} == "TR" || Litra{i,5} == "OR"
+        vector(j) = kmCount;
+        j = j+1; 
+        kmCount = Litra{i,10};
+        elseif Litra{i,5} ~= "TR" || Litra{i,5} ~= "OR"
+        kmCount = kmCount + Litra{i,10};
+        end
+    elseif Litra{i,1} ~= Litra{i+1,1}
+        vector(j) = kmCount + Litra{i,10} ; 
+        j = j+1; 
+        kmCount = 0;
+    end
+end
+
+max(nonzeros(vector))
+min(nonzeros(vector))
+mean(nonzeros(vector))
+
+
+%% Creating Or and Tr for each station 
+
+for i = 1:height(Normal(:,1))
+    if Normal{i,2} == 'ABS' || Normal{i,2} == 'B' || Normal{i,2} == 'BK'
+        Or(i) = 47;
+        Tr(i) = 175;
+
+        elseif Normal{i,2} == 'ERF'
+        Or(i) = 20;
+        Tr(i) = 80;
+
+        elseif Normal{i,2} == 'ETS'
+        Or(i) = 15;
+        Tr(i) = 104;
+
+        elseif Normal{i,2} == 'ICA' 
+        Or(i) = 16;
+        Tr(i) = 72;
+
+        elseif Normal{i,2} == 'MGA'
+        Or(i) = 20;
+        Tr(i) = 109;
+
+
+    end
+end
+
+TRtable=array2table(Tr','VariableNames',{'Tr'});
+Normal=[Normal TRtable];
+
+ORtable=array2table(Or','VariableNames',{'Or'});
+Normal=[Normal ORtable];
+
+%% Calculatng the objective value with their soultion 
+Z = 0; 
+
+for i = 1:height(Normal(:,1))
+    if Normal{i,5} == "TR" 
+        Z = Z + Normal{i,13};
+    elseif Normal{i,5} == "OR"
+        Z = Z + Normal{i,14};
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%
+% NOT IN USE 
 %% Number op kilometers between cleanings on same lbs number:
 KmBetween = [];
 k = 1; 
@@ -90,17 +213,6 @@ max(nonzeros(KmBetween))
 min(nonzeros(KmBetween))
 mean(nonzeros(KmBetween))
 
-%% Number for the different cleanings:
-NumberOR = 0; 
-NumberTR = 0;
-
-for i = 1: height(Normal{:,1})
-    if Normal{i,5} == "OR"
-        NumberOR = NumberOR+1;
-    elseif Normal{i,5} == "TR"
-        NumberTR = NumberTR+1;
-    end
-end
 
 %% Number of km for each train 
 numberKM = [];
@@ -271,47 +383,3 @@ antalL1
 max(nonzeros(KmBetweenL1))
 min(nonzeros(KmBetweenL1))
 mean(nonzeros(KmBetweenL1))
-
-%% Creating Or and Tr for each station 
-
-for i = 1:height(Normal(:,1))
-    if Normal{i,2} == 'ABS' || Normal{i,2} == 'B' || Normal{i,2} == 'BK'
-        Or(i) = 47;
-        Tr(i) = 175;
-
-        elseif Normal{i,2} == 'ERF'
-        Or(i) = 20;
-        Tr(i) = 80;
-
-        elseif Normal{i,2} == 'ETS'
-        Or(i) = 15;
-        Tr(i) = 104;
-
-        elseif Normal{i,2} == 'ICA' 
-        Or(i) = 16;
-        Tr(i) = 72;
-
-        elseif Normal{i,2} == 'MGA'
-        Or(i) = 20;
-        Tr(i) = 109;
-
-
-    end
-end
-
-TRtable=array2table(Tr','VariableNames',{'Tr'});
-Normal=[Normal TRtable];
-
-ORtable=array2table(Or','VariableNames',{'Or'});
-Normal=[Normal ORtable];
-
-%% Calculatng the objective value with their soultion 
-Z = 0; 
-
-for i = 1:height(Normal(:,1))
-    if Normal{i,5} == "TR" 
-        Z = Z + Normal{i,13};
-    elseif Normal{i,5} == "OR"
-        Z = Z + Normal{i,14};
-    end
-end
