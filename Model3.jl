@@ -112,17 +112,6 @@ for i in 2:N
     end
 end
 
-# constraint setting a Tr cleaning the first time possible on each day
-#for i in 1:N-2
-#    if Dd[i] != Dd[i+1] && Dd[i+1] != Dd[1]
-#        k=i+1
-#            while Pc[k] != 1 || St[k] < Tr[k]
-#                k = k + 1
-#            end
-#        @constraint(m, xt[k] .>= 1)
-#    end
-#end
-
 for i in 1:N-2
     if Dd[i] != Dd[i+1] && Dd[i+1] != Dd[1]
         k=i+1
