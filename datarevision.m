@@ -129,19 +129,19 @@ end
 
 for i = 1:height(Normal(:,1))
     if Normal{i,2} == 'ABS' || Normal{i,2} == 'B' || Normal{i,2} == 'BK'
-        Cvalue(i) = 1261;
+        Cvalue(i) = 1171;
 
         elseif Normal{i,2} == 'ERF'
-        Cvalue(i) = 1587; 
+        Cvalue(i) = 1575; 
 
         elseif Normal{i,2} == 'ETS'
-        Cvalue(i) = 1289;
+        Cvalue(i) = 1243;
 
         elseif Normal{i,2} == 'ICA'
-        Cvalue(i) = 1639;
+        Cvalue(i) = 1209;
 
         elseif Normal{i,2} == 'MGA'
-        Cvalue(i) = 1340;
+        Cvalue(i) = 1291;
     end
 end
 
