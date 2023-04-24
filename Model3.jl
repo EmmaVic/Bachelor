@@ -15,9 +15,11 @@ m = Model(Gurobi.Optimizer)
 # time limit
 set_time_limit_sec(m, 600)
 
-# big M notation
-M = 1700
+# C-value vector
+C = df.Cvalues
 
+# big M notation
+M = max(C)
 
 # number of trains
 N = length(df.Litra)
@@ -48,8 +50,6 @@ Ds = df.FraStation
 # Lbsnr vector
 Ln = df.Lbsnr
 
-# C-value vector
-C = df.Cvalues
 
 # time of Tr and Or cleaning in minutes
 Tr = df.Tr
