@@ -19,7 +19,7 @@ set_time_limit_sec(m, 600)
 C = df.Cvalues
 
 # big M notation
-M = max(C)
+M = 1575
 
 # number of trains
 N = length(df.Litra)
@@ -58,7 +58,7 @@ Or = df.Or
 # Procentage of Or cleaning to Tr cleaning
 q = zeros(N)
 for i in 1:N
-    q[i] = Or[i]/Tr[i]
+    q[i] = Or[i]*2/Tr[i]
 end
 
 # vector of binary values saying if a cleaning can happen at given station
