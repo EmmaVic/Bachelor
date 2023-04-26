@@ -13,10 +13,10 @@ df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 m = Model(Gurobi.Optimizer)
 
 # time limit
-set_time_limit_sec(m, 500)
+set_time_limit_sec(m, 1800)   
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1500.0
+C = 1575.0
 
 # big M notation
 M = C
@@ -58,7 +58,7 @@ Or = df.Or
 # Procentage of Or cleaning to Tr cleaning
 q = zeros(N)
 for i in 1:N
-    q[i] = Or[i]/Tr[i]
+    q[i] = 1/2
 end
 
 # vector of binary values saying if a cleaning can happen at given station

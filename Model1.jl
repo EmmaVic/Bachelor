@@ -41,7 +41,7 @@ Or = df.Or
 # Procentage of Or cleaning to Tr cleaning
 q = zeros(N)
 for i in 1:N
-    q[i] = Or[i]/Tr[i]
+    q[i] = 1/2
 end
 
 # vector of binary values saying if a cleaning can happen at given station
@@ -54,7 +54,7 @@ St =  (df.StopTime)
 Ln = df.Lbsnr
 
 # max cutoff of kilometers of dirtyness, in km
-C = 1638.0
+C = 1575.0
 
 # big M notation
 M = C
@@ -88,9 +88,6 @@ for i in 2:N
         @constraint(m, KD[i] .>= KD[i-1]+km[i]-zt[i]-q[i]*zo[i])
     end
 end
-
-
-
 
 # Optimizing the model
 optimize!(m)
