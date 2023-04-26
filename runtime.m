@@ -14,7 +14,7 @@ yprocent = [4.99, 4.12, 3.49, 3.32, 3.25, 3.25, 3.25, 3.02, 2.97]; %ved 600 3,23
 figure
 plot(x,yprocent, 'b--o')
 title('Solution quality over time')
-xlabel('runtime in [s]')
+xlabel('Runtime in [s]')
 ylabel('Gap in [%]')
 % the gap is between best objective value found and best lower bound found
 % in [%]

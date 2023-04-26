@@ -13,7 +13,7 @@ df = DataFrame(XLSX.readtable("reviseddataAllData.xlsx","Sheet1"))
 m = Model(Gurobi.Optimizer)
 
 # time limit
-set_time_limit_sec(m, 1800)   
+set_time_limit_sec(m, 500)   
 
 # max cutoff of kilometers of dirtyness, in km
 C = 1575.0

@@ -46,7 +46,7 @@ Litra6 = solution(8923:11575,:);
 Litra7 = solution(11576:end,:);
 %%
 
-Litra = Litra7;
+Litra = solution;
 
 % Antal rengøringer i alt
 totalAntal = 0;
