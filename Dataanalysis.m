@@ -139,6 +139,74 @@ max(nonzeros(vector))
 min(nonzeros(vector))
 mean(nonzeros(vector))
 
+%% Hvor mange or og TR pr litra
+antalOR = 0;
+antalTR = 0; 
+
+Litra = Litra1; 
+
+for i = 1: height(Litra{:,1})
+    if Litra{i,5} == "TR"
+        antalTR = antalTR+1;
+    elseif Litra{i,5} == "OR"
+        antalOR = antalOR+1;
+    end
+end
+
+%% kilometer between OR 
+
+j = 1; 
+vector = [];
+kmCount = 0;
+
+Litra = Normal;
+
+for i = 1:height(Litra(:,1))-1
+    if Litra{i,1} == Litra{i+1,1}
+        if Litra{i,5} == "OR"
+        vector(j) = kmCount;
+        j = j+1; 
+        kmCount = Litra{i,10};
+        elseif Litra{i,5} ~= "OR"
+        kmCount = kmCount + Litra{i,10};
+        end
+    elseif Litra{i,1} ~= Litra{i+1,1}
+        vector(j) = kmCount + Litra{i,10} ; 
+        j = j+1; 
+        kmCount = 0;
+    end
+end
+
+max(nonzeros(vector))
+min(nonzeros(vector))
+mean(nonzeros(vector))
+
+%% kilometer between Tr 
+j = 1; 
+vector = [];
+kmCount = 0;
+
+Litra = Normal;
+
+for i = 1:height(Litra(:,1))-1
+    if Litra{i,1} == Litra{i+1,1}
+        if Litra{i,5} == "TR"
+        vector(j) = kmCount;
+        j = j+1; 
+        kmCount = Litra{i,10};
+        elseif Litra{i,5} ~= "TR"
+        kmCount = kmCount + Litra{i,10};
+        end
+    elseif Litra{i,1} ~= Litra{i+1,1}
+        vector(j) = kmCount + Litra{i,10} ; 
+        j = j+1; 
+        kmCount = 0;
+    end
+end
+
+max(nonzeros(vector))
+min(nonzeros(vector))
+mean(nonzeros(vector))
 
 %% Creating Or and Tr for each station 
 
