@@ -69,7 +69,7 @@ j = 1;
 vector = [];
 kmCount = 0;
 
-Litra = Litra7;
+Litra = Litra1;
 
 for i = 1:height(Litra(:,1))-1
     if Litra{i,1} == Litra{i+1,1}
@@ -90,4 +90,61 @@ end
 
 max(nonzeros(vector))
 min(nonzeros(vector))
+mean(nonzeros(vector))
+
+%%
+%% OR
+j = 1; 
+vector = [];
+kmCount = 0;
+
+Litra = solution;
+
+for i = 1:height(Litra(:,1))-1
+    if Litra{i,1} == Litra{i+1,1}
+        if Litra{i,17} == 1
+            kmCount = kmCount + Litra{i,10};
+            vector(j) = kmCount;
+            j = j+1; 
+            kmCount = 0;
+        elseif Litra{i,17} == 0
+            kmCount = kmCount + Litra{i,10};
+        end
+    elseif Litra{i,1} ~= Litra{i+1,1}
+            vector(j) = kmCount + Litra{i,10} ; 
+            j = j+1; 
+            kmCount = 0;
+    end
+end
+
+max(nonzeros(vector))
+min(nonzeros(vector))
+mean(nonzeros(vector))
+
+%% TR
+j = 1; 
+vector = [];
+kmCount = 0;
+
+Litra = [Litra3;Litra5;Litra6;Litra7];
+
+for i = 1:height(Litra(:,1))-1
+    if Litra{i,1} == Litra{i+1,1}
+        if Litra{i,16} == 1
+            kmCount = kmCount + Litra{i,10};
+            vector(j) = kmCount;
+            j = j+1; 
+            kmCount = 0;
+        elseif Litra{i,16} == 0
+            kmCount = kmCount + Litra{i,10};
+        end
+    elseif Litra{i,1} ~= Litra{i+1,1}
+            vector(j) = kmCount + Litra{i,10} ; 
+            j = j+1; 
+            kmCount = 0;
+    end
+end
+
+max(nonzeros(vector))
+min(vector)
 mean(nonzeros(vector))
