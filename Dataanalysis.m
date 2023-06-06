@@ -103,13 +103,13 @@ end
 
 %% The different litra types 
 
-Litra1 = Normal(1:1803,:);
-Litra2 = Normal(1804:2551,:);
-Litra3 = Normal(2552:6758,:);
-Litra4 = Normal(6759:7859,:);
-Litra5 = Normal(7860:8922,:);
-Litra6 = Normal(8923:11575,:);
-Litra7 = Normal(11576:end,:);
+Litra1 = Normal(1:1802,:);
+Litra2 = Normal(1803:2550,:);
+Litra3 = Normal(2551:6757,:);
+Litra4 = Normal(6758:7858,:);
+Litra5 = Normal(7859:8921,:);
+Litra6 = Normal(8922:11574,:);
+Litra7 = Normal(11575:end,:);
 
 %% max, min and mean on the different litratypes
 
@@ -451,3 +451,29 @@ antalL1
 max(nonzeros(KmBetweenL1))
 min(nonzeros(KmBetweenL1))
 mean(nonzeros(KmBetweenL1))
+
+%% 
+
+kmforeachtrain = [];
+ridesforeachtrain = [];
+rt = 1;
+j = 1; 
+
+Litra = Litra7;
+
+for i = 1:height(Litra(:,1))-1
+
+    if Litra{i,1} == Litra{i+1,1}
+        rt = rt + 1;
+    else
+        ridesforeachtrain(j) = rt;
+        kmforeachtrain(j) = Litra{i,11};
+        rt = 1;
+        j = j+1;
+    end
+end
+
+max(kmforeachtrain)
+min(kmforeachtrain)
+mean(kmforeachtrain)
+

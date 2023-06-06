@@ -58,7 +58,7 @@ Or = df.Or
 # Procentage of Or cleaning to Tr cleaning
 q = zeros(N)
 for i in 1:N
-    q[i] = Or[i]*2/Tr[i]
+    q[i] = 1/2
 end
 
 # vector of binary values saying if a cleaning can happen at given station
@@ -112,6 +112,7 @@ for i in 2:N
     end
 end
 
+# constraint making sure that a TR is forced every day
 for i in 1:N-2
     if Dd[i] != Dd[i+1] && Dd[i+1] != Dd[1]
         k=i+1

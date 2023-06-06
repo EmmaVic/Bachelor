@@ -4,7 +4,7 @@
 % 13/03/2023
 %% 
 
-solution = Solmodel2;
+solution = Solmodel3;
 
 % Antal rengøringer i alt
 index = [];
@@ -46,7 +46,7 @@ Litra6 = solution(8923:11575,:);
 Litra7 = solution(11576:end,:);
 %%
 
-Litra = Litra6;
+Litra = Litra5;
 
 % Antal rengøringer i alt
 totalAntal = 0;
@@ -68,8 +68,6 @@ end
 j = 1; 
 vector = [];
 kmCount = 0;
-
-Litra = Litra1;
 
 for i = 1:height(Litra(:,1))-1
     if Litra{i,1} == Litra{i+1,1}
@@ -98,7 +96,7 @@ j = 1;
 vector = [];
 kmCount = 0;
 
-Litra = solution;
+Litra = Litra7;
 
 for i = 1:height(Litra(:,1))-1
     if Litra{i,1} == Litra{i+1,1}
@@ -126,7 +124,7 @@ j = 1;
 vector = [];
 kmCount = 0;
 
-Litra = [Litra1;Litra3;Litra5;Litra6;Litra7];
+Litra = Litra7;
 
 for i = 1:height(Litra(:,1))-1
     if Litra{i,1} == Litra{i+1,1}
